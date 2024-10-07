@@ -21,6 +21,7 @@ logger = logging.getLogger(__name__)
 
 client_id = os.environ['CLIENT_ID_CM']
 secret = os.environ['CLIENT_SECRET_CM']
+password = os.environ['password']
 credentials = f"{client_id}:{secret}"
 auth= base64.b64encode(credentials.encode('utf-8')).decode('utf-8')
 
@@ -52,7 +53,20 @@ vector_store=FAISS.load_local('vector_store',embedding, allow_dangerous_deserial
 
 embedding_retriever = vector_store.as_retriever(search_kwargs={"k": 10})
 
-st.title("Gigachat RAG Machine")
+st.title("Gigachat бот")
+
+# Проверка пароля пользователя
+if 'authenticated' not in st.session_state:
+    st.session_state.authenticated = False
+
+if not st.session_state.authenticated:
+    entered_password = st.text_input("Введите пароль для доступа:", type="password")
+    if entered_password == password:
+        st.session_state.authenticated = True
+        st.success("Пароль верный! Добро пожаловать!")
+    elif entered_password:
+        st.error("Неверный пароль. Попробуйте снова.")
+        st.stop()
 
 # инициалиация истории чата
 if "messages" not in st.session_state:
@@ -61,7 +75,7 @@ if "messages" not in st.session_state:
             role="system",
             content="You're a smart RAG bot, always ready to help a user find necessary information",
         ),
-        ChatMessage(role="assistant", content="Ask away!"),
+        ChatMessage(role="assistant", content="Напечатайте Ваш вопрос"),
     ]
 
 # отображение сообщений чата из истории при повторном запуске приложения
