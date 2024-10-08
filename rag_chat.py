@@ -71,10 +71,6 @@ if not st.session_state.authenticated:
 # инициалиация истории чата
 if "messages" not in st.session_state:
     st.session_state.messages = [
-        ChatMessage(
-            role="system",
-            content="You're a smart RAG bot, always ready to help a user find necessary information",
-        ),
         ChatMessage(role="assistant", content="Напечатайте Ваш вопрос"),
     ]
 
