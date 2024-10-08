@@ -96,10 +96,9 @@ if input := st.chat_input():
 
     with st.chat_message(message.role):
         st.markdown(message.content)
-
-    qa_chain = create_retrieval_chain(embedding_retriever, document_chain)
-    response = qa_chain.invoke({'input': input})
-    print(response)
+    with st.spinner("Бот обрабатывает ваш запрос..."):
+        qa_chain = create_retrieval_chain(embedding_retriever, document_chain)
+        response = qa_chain.invoke({'input': input})
     otvet = response['answer']
 
     message = ChatMessage(role="assistant", content=otvet)
